@@ -5,8 +5,8 @@
 
 // Do not change anything in this file other than these initializer values
 const char* DICTIONARYPATH = "dictionary.txt";
-const int FOREGROUND_COLOR = COLOR_WHITE;
-const int BACKGROUND_COLOR = COLOR_BLACK;
+const int FOREGROUND_COLOR = COLOR_BLACK;
+const int BACKGROUND_COLOR = COLOR_WHITE;
 const int HIGHLIGHT_COLOR  = COLOR_RED;
 // Choices are COLOR_x, where x is WHITE, BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN
 
