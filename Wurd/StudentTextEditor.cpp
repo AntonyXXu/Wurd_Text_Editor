@@ -131,20 +131,24 @@ void StudentTextEditor::backspace() {
 void StudentTextEditor::insert(char ch) {
   if (ch == '\t')
   {
-
+    m_linesItr->insert(m_col, 4, ' ');
     m_col += 4;
   }
-
-  m_col++;
+  else 
+  {
+    m_linesItr->insert(m_col, 1,  ch);
+    m_col++;
+  }
 }
 
 void StudentTextEditor::enter() {
   //Splice the current string at column, and insert new line to the next line list
+  string leftOfEnter = m_linesItr->substr(0, m_col);
   string rightOfEnter = m_linesItr->substr(m_col, m_linesItr->length() - m_col);
   //Replace the current line with left side of text
-  *m_linesItr = m_linesItr->substr(0, m_col);
+  m_lines.insert(m_linesItr, leftOfEnter);
+  *m_linesItr = rightOfEnter;
 
-  m_lines.insert(m_linesItr, rightOfEnter);
   m_row++;
   m_col = 0;
 
@@ -156,24 +160,24 @@ void StudentTextEditor::getPos(int& row, int& col) const {
 }
 
 int StudentTextEditor::getLines(int startRow, int numRows, std::vector<std::string>& lines) const {
-  //if (startRow < 0 || numRows < 0 || startRow > m_lines.size())
-  //{
-  //  return -1;
-  //}
-  //lines.clear();
-  //list<string>::const_iterator itr = m_lines.begin();
-  //for (int i = 0; i < startRow; i++)
-  //{
-  //  itr++;
-  //}
-  //while (itr != m_lines.end() && numRows > 0)
-  //{
-  //  lines.push_back(*itr);
-  //  itr++;
-  //  numRows--;
-  //}
-  //return lines.size();
-  return 0;
+  if (startRow < 0 || numRows < 0 || startRow > m_lines.size())
+  {
+    return -1;
+  }
+  lines.clear();
+  list<string>::const_iterator itr = m_lines.begin();
+  for (int i = 0; i < startRow; i++)
+  {
+    itr++;
+  }
+  while (itr != m_lines.end() && numRows > 0)
+  {
+    lines.push_back(*itr);
+    itr++;
+    numRows--;
+  }
+  return lines.size();
+  //return 0;
 }
 
 void StudentTextEditor::undo() {
