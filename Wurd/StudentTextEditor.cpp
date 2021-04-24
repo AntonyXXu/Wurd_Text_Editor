@@ -127,6 +127,9 @@ void StudentTextEditor::del() {
     {
       return;
     }
+    m_linesItr++;
+    m_row++;
+    deleteLineHelper();
   }
   else
   {
@@ -141,14 +144,7 @@ void StudentTextEditor::backspace() {
     {
       return;
     }
-    string currentLine = (*m_linesItr);
-    m_linesItr = m_lines.erase(m_linesItr);
-    m_linesItr--;
-    m_col = m_linesItr->length();
-    m_row--;
-    m_linesItr->insert(m_linesItr->length(), currentLine);
-
-
+    deleteLineHelper();
   }
   else
   {
@@ -217,4 +213,14 @@ void StudentTextEditor::init() {
   m_col = 0;
   m_lines.push_back("");
   m_linesItr = m_lines.begin();
+}
+
+void StudentTextEditor::deleteLineHelper()
+{
+  string currentLine = (*m_linesItr);
+  m_linesItr = m_lines.erase(m_linesItr);
+  m_linesItr--;
+  m_col = m_linesItr->length();
+  m_row--;
+  m_linesItr->insert(m_linesItr->length(), currentLine);
 }

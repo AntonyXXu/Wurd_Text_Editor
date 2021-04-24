@@ -31,6 +31,7 @@ private:
 	std::list<std::string>::iterator m_linesItr;
 
 	void init();
+	void deleteLineHelper();
 };
 
 #endif // STUDENTTEXTEDITOR_H_
