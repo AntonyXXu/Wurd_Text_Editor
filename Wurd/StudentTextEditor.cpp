@@ -127,9 +127,8 @@ void StudentTextEditor::del() {
     {
       return;
     }
-
   }
-  else 
+  else
   {
     m_linesItr->erase(m_col, 1);
   }
@@ -142,14 +141,21 @@ void StudentTextEditor::backspace() {
     {
       return;
     }
-    
+    string currentLine = (*m_linesItr);
+    m_linesItr = m_lines.erase(m_linesItr);
+    m_linesItr--;
+    m_col = m_linesItr->length();
+    m_row--;
+    m_linesItr->insert(m_linesItr->length(), currentLine);
+
+
   }
-  else 
+  else
   {
     m_col -= 1;
     m_linesItr->erase(m_col, 1);
   }
-  
+
 }
 
 void StudentTextEditor::insert(char ch) {
@@ -158,9 +164,9 @@ void StudentTextEditor::insert(char ch) {
     m_linesItr->insert(m_col, 4, ' ');
     m_col += 4;
   }
-  else 
+  else
   {
-    m_linesItr->insert(m_col, 1,  ch);
+    m_linesItr->insert(m_col, 1, ch);
     m_col++;
   }
 }
@@ -174,7 +180,7 @@ void StudentTextEditor::enter() {
   *m_linesItr = rightOfEnter;
   m_row++;
   m_col = 0;
-  }
+}
 
 void StudentTextEditor::getPos(int& row, int& col) const {
   row = m_row;
