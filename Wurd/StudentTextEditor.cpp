@@ -55,7 +55,7 @@ void StudentTextEditor::move(Dir dir) {
   case DOWN:
   {
     //Currently at the maximum line
-    if (m_row >= m_lines.size() - 1)
+    if (m_row == m_lines.size() - 1)
     {
       return;
     }
@@ -92,7 +92,7 @@ void StudentTextEditor::move(Dir dir) {
     //Currently at last column
     if (m_col == m_linesItr->length())
     {
-      if (m_row >= m_lines.size() - 1)
+      if (m_row == m_lines.size() - 1)
       {
         return;
       }
@@ -121,11 +121,35 @@ void StudentTextEditor::move(Dir dir) {
 }
 
 void StudentTextEditor::del() {
-  // TODO
+  if (m_col == m_linesItr->length())
+  {
+    if (m_row == m_lines.size() - 1)
+    {
+      return;
+    }
+
+  }
+  else 
+  {
+    m_linesItr->erase(m_col, 1);
+  }
 }
 
 void StudentTextEditor::backspace() {
-  // TODO
+  if (!m_col)
+  {
+    if (!m_row)
+    {
+      return;
+    }
+    
+  }
+  else 
+  {
+    m_col -= 1;
+    m_linesItr->erase(m_col, 1);
+  }
+  
 }
 
 void StudentTextEditor::insert(char ch) {
@@ -148,11 +172,9 @@ void StudentTextEditor::enter() {
   //Replace the current line with left side of text
   m_lines.insert(m_linesItr, leftOfEnter);
   *m_linesItr = rightOfEnter;
-
   m_row++;
   m_col = 0;
-
-}
+  }
 
 void StudentTextEditor::getPos(int& row, int& col) const {
   row = m_row;
