@@ -28,7 +28,7 @@ private:
 	int m_row;
 	int m_col;
 	std::list<std::string> m_lines;
-	std::list<std::string>::iterator m_currentRow;
+	std::list<std::string>::iterator m_linesItr;
 
 	void init();
 };
