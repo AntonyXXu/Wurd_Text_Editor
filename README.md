@@ -8,7 +8,7 @@ This project was created based on UCLA CS-32 Data Structures and Algorithms Proj
 ## Details
 #### Text Editor
 - The entire text document is maintainted with a list of strings. An iterator keeps track of the current editing line. 
-- Main actions are insertion, deletion, enter, backspace functions.
+- Main actions are moving within the editor, insertion, deletion, enter, backspace functions which satisfy the big O requirements from the specifications.
 - The text editor can save and load any specified text file. It can even edit the code I used to create the text editor!
 #### Undo Capabilities
 - Upon insertion, deletion, or changing of the text, the changed text is sent to an Undo Class, which pushes the data on top of a stack. The class also checks if the undo data can be 'batched' together (such as undoing a "word" instead of undoing 'w', 'o', 'r', 'd' through four undo actions).
