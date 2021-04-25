@@ -196,7 +196,7 @@ void StudentTextEditor::backspace() {
 void StudentTextEditor::insert(char ch) {
   if (ch == '\t')
   {
-    for (int i; i < 4; i++)
+    for (int i = 0; i < 4; i++)
     {
       m_linesItr->insert(m_col, 1, ' ');
       m_col++;

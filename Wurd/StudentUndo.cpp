@@ -10,45 +10,45 @@ StudentUndo::~StudentUndo() {
 }
 
 void StudentUndo::submit(const Action action, int row, int col, char ch) {
-
-  if (!m_undoStack.empty())
-  {
-    UndoData previous = m_undoStack.top();
-    if (action == previous.action && row == previous.row)
-    {
-      if (action == INSERT && col == previous.col + 1)
-      {
-        //Insertion undo linking
-        previous.text += ch;
-        previous.row = row;
-        previous.col = col;
-        return;
-      }
-      if (action == DELETE)
-      {
-
-        if (col == previous.col - 1)
-        {
-          //Backspace undo linking
-          previous.text = ch + previous.text;
-          previous.col = col;
-
-          return;
-        }
-        else if (col == previous.col)
-        {
-          //Delete undo linking
-          previous.text += ch;
-          return;
-        }
-      }
-    }
-  }
   UndoData newUndo;
   newUndo.action = action;
   newUndo.row = row;
   newUndo.col = col;
   newUndo.text = ch;
+  if (!m_undoStack.empty())
+  {
+    //Replace the previous undo with the new undo for batching
+    //Batching does not occur if the previously inserted char is space
+    UndoData previous = m_undoStack.top();
+    if (action == previous.action
+      && row == previous.row)
+    {
+      if (action == INSERT
+        && col == previous.col + 1
+        && previous.text[previous.text.size() - 1] != ' ')
+      {
+        //Insertion undo linking
+        newUndo.text = previous.text + ch;
+        m_undoStack.pop();
+      }
+      else if (action == DELETE)
+      {
+        if (col == previous.col - 1)
+        {
+          //Backspace deletion undo linking
+          newUndo.text += previous.text;
+          m_undoStack.pop();
+        }
+        else if (col == previous.col)
+        {
+          //Delete deletion undo linking
+          newUndo.text = previous.text + ch;
+          m_undoStack.pop();
+        }
+      }
+    }
+  }
+
   m_undoStack.push(newUndo);
 }
 
