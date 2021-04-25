@@ -2,6 +2,8 @@
 #include "Undo.h"
 #include <string>
 #include <vector>
+#include <iostream>
+#include <fstream>
 using namespace std;
 
 
@@ -17,15 +19,39 @@ StudentTextEditor::StudentTextEditor(Undo* undo)
 
 StudentTextEditor::~StudentTextEditor()
 {
-
+  m_lines.clear();
 }
 
 bool StudentTextEditor::load(std::string file) {
-  return false;  // TODO
+  ifstream infile(file);
+  if (!infile)
+  {
+    return false;
+  }
+  reset();
+  string textLine;
+  while (getline(infile, textLine))
+  {
+    textLine.erase(remove(textLine.begin(), textLine.end(), '\r'), textLine.end());
+    m_lines.push_back(textLine);
+  }
+  return true;
 }
 
 bool StudentTextEditor::save(std::string file) {
-  return false;  // TODO
+  ofstream outfile(file);
+  if (!outfile)
+  {
+    return false;
+  }
+  list<string>::iterator itr = m_lines.begin();
+  while (itr != m_lines.end())
+  {
+    outfile << *itr << endl;
+    itr++;
+  }
+  
+  return true;  // TODO
 }
 
 void StudentTextEditor::reset() {
@@ -41,6 +67,7 @@ void StudentTextEditor::move(Dir dir) {
     //Currently at line 0
     if (!m_row)
     {
+      m_col = 0;
       return;
     }
     m_linesItr--;
@@ -57,6 +84,7 @@ void StudentTextEditor::move(Dir dir) {
     //Currently at the maximum line
     if (m_row == m_lines.size() - 1)
     {
+      m_col = m_linesItr->length();
       return;
     }
     m_linesItr++;
@@ -189,11 +217,22 @@ int StudentTextEditor::getLines(int startRow, int numRows, std::vector<std::stri
     return -1;
   }
   lines.clear();
-  list<string>::const_iterator itr = m_lines.begin();
-  for (int i = 0; i < startRow; i++)
+  list<string>::const_iterator itr = m_linesItr;
+  if (m_row >= startRow)
   {
-    itr++;
+    for (int i = m_row; i > startRow; i--)
+    {
+      itr--;
+    }
   }
+  else
+  {
+    for (int i = m_row; i < startRow; i++)
+    {
+      itr++;
+    }
+  }
+
   while (itr != m_lines.end() && numRows > 0)
   {
     lines.push_back(*itr);
