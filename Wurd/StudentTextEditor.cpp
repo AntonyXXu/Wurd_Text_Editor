@@ -14,6 +14,7 @@ TextEditor* createTextEditor(Undo* un)
 
 StudentTextEditor::StudentTextEditor(Undo* undo)
   : TextEditor(undo) {
+  m_undo = undo;
   init();
 }
 
@@ -35,8 +36,13 @@ bool StudentTextEditor::load(std::string file) {
     textLine.erase(remove(textLine.begin(), textLine.end(), '\r'), textLine.end());
     m_lines.push_back(textLine);
   }
-  m_lines.pop_front();
-  m_linesItr = m_lines.begin();
+
+  //Remove the first line initialized (except if file was empty)
+  if (m_lines.size())
+  {
+    m_lines.pop_front();
+    m_linesItr = m_lines.begin();
+  }
   return true;
 }
 
@@ -52,7 +58,7 @@ bool StudentTextEditor::save(std::string file) {
     outfile << *itr << endl;
     itr++;
   }
-  
+
   return true;  // TODO
 }
 
@@ -163,7 +169,9 @@ void StudentTextEditor::del() {
   }
   else
   {
+    char ch = (*m_linesItr)[m_col];
     m_linesItr->erase(m_col, 1);
+    m_undo->submit(Undo::DELETE, m_row, m_col, ch);
   }
 }
 
@@ -179,7 +187,9 @@ void StudentTextEditor::backspace() {
   else
   {
     m_col -= 1;
+    char ch = (*m_linesItr)[m_col];
     m_linesItr->erase(m_col, 1);
+    m_undo->submit(Undo::DELETE, m_row, m_col, ch);
   }
 
 }
@@ -189,6 +199,7 @@ void StudentTextEditor::insert(char ch) {
   {
     m_linesItr->insert(m_col, 4, ' ');
     m_col += 4;
+
   }
   else
   {
@@ -234,7 +245,6 @@ int StudentTextEditor::getLines(int startRow, int numRows, std::vector<std::stri
       itr++;
     }
   }
-
   while (itr != m_lines.end() && numRows > 0)
   {
     lines.push_back(*itr);
@@ -242,17 +252,18 @@ int StudentTextEditor::getLines(int startRow, int numRows, std::vector<std::stri
     numRows--;
   }
   return lines.size();
-  //return 0;
 }
 
 void StudentTextEditor::undo() {
-  
+
+
+
 }
 
 void StudentTextEditor::init() {
   m_row = 0;
   m_col = 0;
-      m_lines.push_back("");
+  m_lines.push_back("");
   m_linesItr = m_lines.begin();
 }
 
@@ -264,4 +275,5 @@ void StudentTextEditor::deleteLineHelper()
   m_col = m_linesItr->length();
   m_row--;
   m_linesItr->insert(m_linesItr->length(), currentLine);
+  m_undo->submit(Undo::JOIN, m_row, m_col);
 }
