@@ -14,7 +14,6 @@ TextEditor* createTextEditor(Undo* un)
 
 StudentTextEditor::StudentTextEditor(Undo* undo)
   : TextEditor(undo) {
-  m_undo = undo;
   init();
 }
 
@@ -38,7 +37,7 @@ bool StudentTextEditor::load(std::string file) {
   }
 
   //Remove the first line initialized (except if file was empty)
-  if (m_lines.size())
+  if (!m_lines.empty())
   {
     m_lines.pop_front();
     m_linesItr = m_lines.begin();
@@ -171,7 +170,7 @@ void StudentTextEditor::del() {
   {
     char ch = (*m_linesItr)[m_col];
     m_linesItr->erase(m_col, 1);
-    m_undo->submit(Undo::DELETE, m_row, m_col, ch);
+    getUndo()->submit(Undo::DELETE, m_row, m_col, ch);
   }
 }
 
@@ -189,7 +188,7 @@ void StudentTextEditor::backspace() {
     m_col -= 1;
     char ch = (*m_linesItr)[m_col];
     m_linesItr->erase(m_col, 1);
-    m_undo->submit(Undo::DELETE, m_row, m_col, ch);
+    getUndo()->submit(Undo::DELETE, m_row, m_col, ch);
   }
 
 }
@@ -197,18 +196,23 @@ void StudentTextEditor::backspace() {
 void StudentTextEditor::insert(char ch) {
   if (ch == '\t')
   {
-    m_linesItr->insert(m_col, 4, ' ');
-    m_col += 4;
-
+    for (int i; i < 4; i++)
+    {
+      m_linesItr->insert(m_col, 1, ' ');
+      m_col++;
+      getUndo()->submit(Undo::INSERT, m_row, m_col, ' ');
+    }
   }
   else
   {
     m_linesItr->insert(m_col, 1, ch);
     m_col++;
+    getUndo()->submit(Undo::INSERT, m_row, m_col, ch);
   }
 }
 
 void StudentTextEditor::enter() {
+  getUndo()->submit(Undo::SPLIT, m_row, m_col);
   //Splice the current string at column, and insert new line to the next line list
   string leftOfEnter = m_linesItr->substr(0, m_col);
   string rightOfEnter = m_linesItr->substr(m_col, m_linesItr->length() - m_col);
@@ -275,5 +279,5 @@ void StudentTextEditor::deleteLineHelper()
   m_col = m_linesItr->length();
   m_row--;
   m_linesItr->insert(m_linesItr->length(), currentLine);
-  m_undo->submit(Undo::JOIN, m_row, m_col);
+  getUndo()->submit(Undo::JOIN, m_row, m_col);
 }
