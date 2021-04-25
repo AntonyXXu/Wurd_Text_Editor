@@ -1,9 +1,9 @@
 ﻿  StudentTextEditor.cpp
-C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\Wurd\StudentTextEditor.cpp(78,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\Wurd\StudentTextEditor.cpp(87,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\Wurd\StudentTextEditor.cpp(95,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\Wurd\StudentTextEditor.cpp(111,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\Wurd\StudentTextEditor.cpp(145,31): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\Wurd\StudentTextEditor.cpp(242,22): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\Wurd\StudentTextEditor.cpp(262,31): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\Wurd\StudentTextEditor.cpp(80,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\Wurd\StudentTextEditor.cpp(89,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\Wurd\StudentTextEditor.cpp(97,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\Wurd\StudentTextEditor.cpp(113,35): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\Wurd\StudentTextEditor.cpp(147,31): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\Wurd\StudentTextEditor.cpp(244,22): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\Wurd\StudentTextEditor.cpp(264,31): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
   Wurd.vcxproj -> C:\Users\anton\Documents\Work\Coding\GitHub\Wurd_Text_Editor\x64\Debug\Wurd.exe

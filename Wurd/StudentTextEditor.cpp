@@ -35,6 +35,8 @@ bool StudentTextEditor::load(std::string file) {
     textLine.erase(remove(textLine.begin(), textLine.end(), '\r'), textLine.end());
     m_lines.push_back(textLine);
   }
+  m_lines.pop_front();
+  m_linesItr = m_lines.begin();
   return true;
 }
 
@@ -244,13 +246,13 @@ int StudentTextEditor::getLines(int startRow, int numRows, std::vector<std::stri
 }
 
 void StudentTextEditor::undo() {
-  // TODO
+  
 }
 
 void StudentTextEditor::init() {
   m_row = 0;
   m_col = 0;
-  m_lines.push_back("");
+      m_lines.push_back("");
   m_linesItr = m_lines.begin();
 }
 
