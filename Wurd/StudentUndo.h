@@ -14,12 +14,14 @@ public:
 private:
   struct UndoData
   {
-    Action action;
+    Undo::Action action;
     std::string text;
     int row;
     int col;
-  };
+  }; 
   std::stack<UndoData> m_undoStack;
 };
+
+
 
 #endif // STUDENTUNDO_H_

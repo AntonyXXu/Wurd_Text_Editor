@@ -25,9 +25,12 @@ void StudentUndo::submit(const Action action, int row, int col, char ch) {
     {
       if (action == INSERT
         && col == previous.col + 1
-        && previous.text[previous.text.size() - 1] != ' ')
+        && previous.text[previous.text.size() - 1] != ' '
+        || ch == ' ')
       {
         //Insertion undo linking
+        //Only triggers if the text is the same word
+        //and if the inserted text is a tab/space
         newUndo.text = previous.text + ch;
         m_undoStack.pop();
       }
@@ -53,8 +56,7 @@ void StudentUndo::submit(const Action action, int row, int col, char ch) {
 }
 
 StudentUndo::Action StudentUndo::get(int& row, int& col, int& count, std::string& text) {
-  if (m_undoStack.empty())
-  {
+  if (m_undoStack.empty()) {
     return ERROR;
   }
   UndoData undo = m_undoStack.top();
@@ -83,8 +85,7 @@ StudentUndo::Action StudentUndo::get(int& row, int& col, int& count, std::string
 }
 
 void StudentUndo::clear() {
-  while (!m_undoStack.empty())
-  {
+  while (!m_undoStack.empty()) {
     m_undoStack.pop();
   }
 }

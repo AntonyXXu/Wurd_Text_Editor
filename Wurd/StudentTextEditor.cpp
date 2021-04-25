@@ -62,7 +62,6 @@ void StudentTextEditor::move(Dir dir) {
   switch (dir)
   {
   case UP:
-  {
     //Currently at line 0
     if (!m_row) {
       m_col = 0;
@@ -77,9 +76,8 @@ void StudentTextEditor::move(Dir dir) {
       m_col = m_linesItr->length();
     }
     break;
-  }
+
   case DOWN:
-  {
     //Currently at the maximum line
     if (m_row == m_lines.size() - 1) {
       m_col = m_linesItr->length();
@@ -93,9 +91,8 @@ void StudentTextEditor::move(Dir dir) {
       m_col = m_linesItr->length();
     }
     break;
-  }
+
   case LEFT:
-  {
     //Currently at first column
     if (!m_col) {
       if (!m_row) {
@@ -111,9 +108,8 @@ void StudentTextEditor::move(Dir dir) {
       m_col--;
     }
     break;
-  }
+
   case RIGHT:
-  {
     //Currently at last column
     if (m_col == m_linesItr->length()) {
       if (m_row == m_lines.size() - 1) {
@@ -128,17 +124,14 @@ void StudentTextEditor::move(Dir dir) {
       m_col++;
     }
     break;
-  }
+
   case HOME:
-  {
     m_col = 0;
     break;
-  }
+
   case END:
-  {
     m_col = m_linesItr->size();
     break;
-  }
   }
 }
 
@@ -150,6 +143,7 @@ void StudentTextEditor::del() {
     m_linesItr++;
     m_row++;
     deleteLineHelper();
+    getUndo()->submit(Undo::JOIN, m_row, m_col);
   }
   else {
     char ch = (*m_linesItr)[m_col];
@@ -164,6 +158,7 @@ void StudentTextEditor::backspace() {
       return;
     }
     deleteLineHelper();
+    getUndo()->submit(Undo::JOIN, m_row, m_col);
   }
   else {
     m_col -= 1;
@@ -193,14 +188,7 @@ void StudentTextEditor::insert(char ch) {
 
 void StudentTextEditor::enter() {
   getUndo()->submit(Undo::SPLIT, m_row, m_col);
-  //Splice the current string at column, and insert new line to the next line list
-  string leftOfEnter = m_linesItr->substr(0, m_col);
-  string rightOfEnter = m_linesItr->substr(m_col, m_linesItr->length() - m_col);
-  //Replace the current line with left side of text
-  m_lines.insert(m_linesItr, leftOfEnter);
-  *m_linesItr = rightOfEnter;
-  m_row++;
-  m_col = 0;
+  splitLineHelper();
 }
 
 void StudentTextEditor::getPos(int& row, int& col) const {
@@ -232,22 +220,33 @@ void StudentTextEditor::undo() {
     return;
   }
 
+  //Move the editing location to the undo location
+  moveIteratorHelper(m_row, row, m_linesItr);
   m_row = row;
   m_col = col;
+  string leftOfEnter;
+  string rightOfEnter;
 
-
-  switch (action) {
-
+  switch (action)
+  {
   case Undo::INSERT:
-    m_linesItr;
-    m_col = col;
+    m_linesItr->insert(m_col, text);
     break;
 
   case Undo::DELETE:
+    m_col = m_col - count;
+    m_linesItr->erase(m_col, count);
     break;
+
   case Undo::SPLIT:
+    splitLineHelper();
     break;
+
   case Undo::JOIN:
+    m_linesItr++;
+    m_row++;
+    m_col = 0;
+    deleteLineHelper();
     break;
   }
 }
@@ -259,27 +258,36 @@ void StudentTextEditor::init() {
   m_linesItr = m_lines.begin();
 }
 
-void StudentTextEditor::deleteLineHelper()
-{
+void StudentTextEditor::deleteLineHelper() {
   string currentLine = (*m_linesItr);
   m_linesItr = m_lines.erase(m_linesItr);
   m_linesItr--;
   m_col = m_linesItr->length();
   m_row--;
   m_linesItr->insert(m_linesItr->length(), currentLine);
-  getUndo()->submit(Undo::JOIN, m_row, m_col);
 }
 
-void StudentTextEditor::moveIteratorHelper(int currentRow, int desiredRow, std::list<std::string>::iterator iterator) const
+void StudentTextEditor::splitLineHelper() {
+  //Splice the current line at the cursor location
+  string leftOfEnter = m_linesItr->substr(0, m_col);
+  string rightOfEnter = m_linesItr->substr(m_col, m_linesItr->length() - m_col);
+  //Replace the current line with left side of text
+  m_lines.insert(m_linesItr, leftOfEnter);
+  *m_linesItr = rightOfEnter;
+  m_row++;
+  m_col = 0;
+}
+
+void StudentTextEditor::moveIteratorHelper(int currentRow, int desiredRow, std::list<std::string>::iterator& iterator) const
 {
   if (currentRow >= desiredRow) {
     for (int i = currentRow; i > desiredRow; i--) {
-      iterator;
+      iterator--;
     }
   }
   else {
     for (int i = currentRow; i < desiredRow; i++) {
-      iterator;
+      iterator++;
     }
   }
 }

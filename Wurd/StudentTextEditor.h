@@ -32,7 +32,9 @@ private:
 
   void init();
   void deleteLineHelper();
-  void moveIteratorHelper(int currentRow, int desiredRow, std::list<std::string>::iterator iterator) const;
+  void splitLineHelper();
+  void moveIteratorHelper(int currentRow, int desiredRow, std::list<std::string>::iterator& iterator) const;
+
 };
 
 #endif // STUDENTTEXTEDITOR_H_
