@@ -7,8 +7,7 @@
 using namespace std;
 
 
-TextEditor* createTextEditor(Undo* un)
-{
+TextEditor* createTextEditor(Undo* un) {
   return new StudentTextEditor(un);
 }
 
@@ -17,28 +16,24 @@ StudentTextEditor::StudentTextEditor(Undo* undo)
   init();
 }
 
-StudentTextEditor::~StudentTextEditor()
-{
+StudentTextEditor::~StudentTextEditor() {
   m_lines.clear();
 }
 
 bool StudentTextEditor::load(std::string file) {
   ifstream infile(file);
-  if (!infile)
-  {
+  if (!infile) {
     return false;
   }
   reset();
   string textLine;
-  while (getline(infile, textLine))
-  {
+  while (getline(infile, textLine)) {
     textLine.erase(remove(textLine.begin(), textLine.end(), '\r'), textLine.end());
     m_lines.push_back(textLine);
   }
 
   //Remove the first line initialized (except if file was empty)
-  if (!m_lines.empty())
-  {
+  if (!m_lines.empty()) {
     m_lines.pop_front();
     m_linesItr = m_lines.begin();
   }
@@ -47,17 +42,14 @@ bool StudentTextEditor::load(std::string file) {
 
 bool StudentTextEditor::save(std::string file) {
   ofstream outfile(file);
-  if (!outfile)
-  {
+  if (!outfile) {
     return false;
   }
   list<string>::iterator itr = m_lines.begin();
-  while (itr != m_lines.end())
-  {
+  while (itr != m_lines.end()) {
     outfile << *itr << endl;
     itr++;
   }
-
   return true;  // TODO
 }
 
@@ -72,13 +64,13 @@ void StudentTextEditor::move(Dir dir) {
   case UP:
   {
     //Currently at line 0
-    if (!m_row)
-    {
+    if (!m_row) {
       m_col = 0;
       return;
     }
     m_linesItr--;
     m_row--;
+
     //If previous line is shorter, new column is the last member of the previous line
     if (m_col > m_linesItr->length())
     {
@@ -89,16 +81,15 @@ void StudentTextEditor::move(Dir dir) {
   case DOWN:
   {
     //Currently at the maximum line
-    if (m_row == m_lines.size() - 1)
-    {
+    if (m_row == m_lines.size() - 1) {
       m_col = m_linesItr->length();
       return;
     }
     m_linesItr++;
     m_row++;
-    //If previous line is shorter, new column is the last member of the previous line
-    if (m_col > m_linesItr->length())
-    {
+
+    //If next line is shorter, new column is the last member of the previous line
+    if (m_col > m_linesItr->length()) {
       m_col = m_linesItr->length();
     }
     break;
@@ -106,10 +97,8 @@ void StudentTextEditor::move(Dir dir) {
   case LEFT:
   {
     //Currently at first column
-    if (!m_col)
-    {
-      if (!m_row)
-      {
+    if (!m_col) {
+      if (!m_row) {
         return;
       }
       //Go to previous line
@@ -117,7 +106,8 @@ void StudentTextEditor::move(Dir dir) {
       m_row--;
       m_col = m_linesItr->length();
     }
-    else {
+    else
+    {
       m_col--;
     }
     break;
@@ -125,10 +115,8 @@ void StudentTextEditor::move(Dir dir) {
   case RIGHT:
   {
     //Currently at last column
-    if (m_col == m_linesItr->length())
-    {
-      if (m_row == m_lines.size() - 1)
-      {
+    if (m_col == m_linesItr->length()) {
+      if (m_row == m_lines.size() - 1) {
         return;
       }
       //Go to next line
@@ -136,8 +124,7 @@ void StudentTextEditor::move(Dir dir) {
       m_linesItr++;
       m_col = 0;
     }
-    else
-    {
+    else {
       m_col++;
     }
     break;
@@ -156,18 +143,15 @@ void StudentTextEditor::move(Dir dir) {
 }
 
 void StudentTextEditor::del() {
-  if (m_col == m_linesItr->length())
-  {
-    if (m_row == m_lines.size() - 1)
-    {
+  if (m_col == m_linesItr->length()) {
+    if (m_row == m_lines.size() - 1) {
       return;
     }
     m_linesItr++;
     m_row++;
     deleteLineHelper();
   }
-  else
-  {
+  else {
     char ch = (*m_linesItr)[m_col];
     m_linesItr->erase(m_col, 1);
     getUndo()->submit(Undo::DELETE, m_row, m_col, ch);
@@ -175,22 +159,18 @@ void StudentTextEditor::del() {
 }
 
 void StudentTextEditor::backspace() {
-  if (!m_col)
-  {
-    if (!m_row)
-    {
+  if (!m_col) {
+    if (!m_row) {
       return;
     }
     deleteLineHelper();
   }
-  else
-  {
+  else {
     m_col -= 1;
     char ch = (*m_linesItr)[m_col];
     m_linesItr->erase(m_col, 1);
     getUndo()->submit(Undo::DELETE, m_row, m_col, ch);
   }
-
 }
 
 void StudentTextEditor::insert(char ch) {
@@ -229,28 +209,14 @@ void StudentTextEditor::getPos(int& row, int& col) const {
 }
 
 int StudentTextEditor::getLines(int startRow, int numRows, std::vector<std::string>& lines) const {
-  if (startRow < 0 || numRows < 0 || startRow > m_lines.size())
-  {
+  if (startRow < 0 || numRows < 0 || startRow > m_lines.size()) {
     return -1;
   }
   lines.clear();
-  list<string>::const_iterator itr = m_linesItr;
-  if (m_row >= startRow)
-  {
-    for (int i = m_row; i > startRow; i--)
-    {
-      itr--;
-    }
-  }
-  else
-  {
-    for (int i = m_row; i < startRow; i++)
-    {
-      itr++;
-    }
-  }
-  while (itr != m_lines.end() && numRows > 0)
-  {
+  list<string>::iterator itr = m_linesItr;
+  moveIteratorHelper(m_row, startRow, itr);
+
+  while (itr != m_lines.end() && numRows > 0) {
     lines.push_back(*itr);
     itr++;
     numRows--;
@@ -259,9 +225,31 @@ int StudentTextEditor::getLines(int startRow, int numRows, std::vector<std::stri
 }
 
 void StudentTextEditor::undo() {
+  int row, col, count;
+  string text;
+  Undo::Action action = getUndo()->get(row, col, count, text);
+  if (action == Undo::ERROR) {
+    return;
+  }
+
+  m_row = row;
+  m_col = col;
 
 
+  switch (action) {
 
+  case Undo::INSERT:
+    m_linesItr;
+    m_col = col;
+    break;
+
+  case Undo::DELETE:
+    break;
+  case Undo::SPLIT:
+    break;
+  case Undo::JOIN:
+    break;
+  }
 }
 
 void StudentTextEditor::init() {
@@ -280,4 +268,18 @@ void StudentTextEditor::deleteLineHelper()
   m_row--;
   m_linesItr->insert(m_linesItr->length(), currentLine);
   getUndo()->submit(Undo::JOIN, m_row, m_col);
+}
+
+void StudentTextEditor::moveIteratorHelper(int currentRow, int desiredRow, std::list<std::string>::iterator iterator) const
+{
+  if (currentRow >= desiredRow) {
+    for (int i = currentRow; i > desiredRow; i--) {
+      iterator;
+    }
+  }
+  else {
+    for (int i = currentRow; i < desiredRow; i++) {
+      iterator;
+    }
+  }
 }

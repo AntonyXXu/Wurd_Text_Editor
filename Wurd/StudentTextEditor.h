@@ -10,29 +10,29 @@ class Undo;
 class StudentTextEditor : public TextEditor {
 public:
 
-	StudentTextEditor(Undo* undo);
-	~StudentTextEditor();
-	bool load(std::string file);
-	bool save(std::string file);
-	void reset();
-	void move(Dir dir);
-	void del();
-	void backspace();
-	void insert(char ch);
-	void enter();
-	void getPos(int& row, int& col) const;
-	int getLines(int startRow, int numRows, std::vector<std::string>& lines) const;
-	void undo();
+  StudentTextEditor(Undo* undo);
+  ~StudentTextEditor();
+  bool load(std::string file);
+  bool save(std::string file);
+  void reset();
+  void move(Dir dir);
+  void del();
+  void backspace();
+  void insert(char ch);
+  void enter();
+  void getPos(int& row, int& col) const;
+  int getLines(int startRow, int numRows, std::vector<std::string>& lines) const;
+  void undo();
 
 private:
-	int m_row;
-	int m_col;
-	std::list<std::string> m_lines;
-	std::list<std::string>::iterator m_linesItr;
+  int m_row;
+  int m_col;
+  std::list<std::string> m_lines;
+  std::list<std::string>::iterator m_linesItr;
 
-	
-	void init();
-	void deleteLineHelper();
+  void init();
+  void deleteLineHelper();
+  void moveIteratorHelper(int currentRow, int desiredRow, std::list<std::string>::iterator iterator) const;
 };
 
 #endif // STUDENTTEXTEDITOR_H_
