@@ -36,7 +36,17 @@ bool StudentSpellCheck::load(std::string dictionaryFile) {
 }
 
 bool StudentSpellCheck::spellCheck(std::string word, int max_suggestions, std::vector<std::string>& suggestions) {
-  return false; // TODO
+  if (search(word)) {
+    return true;
+  }
+  //Check for suggestions
+  //Suggestions must only be one letter different and same length
+  bool difference = false;
+  for (int i = 0; i < word.size(); i++) {
+
+  }
+
+  return false;
 }
 
 void StudentSpellCheck::spellCheckLine(const std::string& line, std::vector<SpellCheck::Position>& problems) {
@@ -70,13 +80,13 @@ void StudentSpellCheck::clear(TrieNode* node) {
   node = nullptr;
 }
 
-bool StudentSpellCheck::search(string text) const {
+bool StudentSpellCheck::search(string word) const {
   TrieNode* currNode = m_trieRoot;
-  for (int i = 0; i < text.size(); i++) {
+  for (int i = 0; i < word.size(); i++) {
     if (!currNode) {
       return false;
     }
-    int index = charIndex(tolower(text[i]));
+    int index = charIndex(tolower(word[i]));
     currNode = currNode->childrenNodes[index];
   }
   return currNode->leaf;

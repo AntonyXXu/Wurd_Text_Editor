@@ -32,7 +32,7 @@ private:
   TrieNode* m_trieRoot;
   void insert(std::string word);
   void clear(TrieNode* node);
-  bool search(std::string text) const;
+  bool search(std::string word) const;
   int charIndex(char ch) const;
 };
 
