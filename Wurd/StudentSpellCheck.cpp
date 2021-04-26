@@ -71,13 +71,19 @@ void StudentSpellCheck::clear(TrieNode* node) {
 }
 
 bool StudentSpellCheck::search(string text) const {
+  TrieNode* currNode = m_trieRoot;
   for (int i = 0; i < text.size(); i++) {
-
+    if (!currNode) {
+      return false;
+    }
+    int index = charIndex(tolower(text[i]));
+    currNode = currNode->childrenNodes[index];
   }
+  return currNode->leaf;
 
 }
 
-int StudentSpellCheck::charIndex(char ch) {
+int StudentSpellCheck::charIndex(char ch) const {
   int index = ch - 'a';
   //Default index = 26 for special characters
   if (index > 25 || index < 0) {

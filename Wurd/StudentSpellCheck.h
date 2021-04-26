@@ -33,7 +33,7 @@ private:
   void insert(std::string word);
   void clear(TrieNode* node);
   bool search(std::string text) const;
-  int charIndex(char ch);
+  int charIndex(char ch) const;
 };
 
 #endif  // STUDENTSPELLCHECK_H_
