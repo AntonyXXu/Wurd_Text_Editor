@@ -19,9 +19,10 @@ private:
   struct TrieNode {
     TrieNode()
     {
+     
       for (int i = 0; i < CHARS; i++)
       {
-        childrenNodes[i] = nullptr;
+        childrenNodes.push_back(nullptr);
       }
       leaf = false;
     }
