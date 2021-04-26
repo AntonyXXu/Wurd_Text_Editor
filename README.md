@@ -13,5 +13,7 @@ This project was created based on UCLA CS-32 Data Structures and Algorithms Proj
 #### Undo Capabilities
 - Upon insertion, deletion, or changing of the text, the changed text is sent to an Undo Class, which pushes the data on top of a stack. The class also checks if the undo data can be 'batched' together (such as undoing a "word" instead of undoing 'w', 'o', 'r', 'd' through four undo actions).
 - When the user calls undo through Control+Z, the data is popped and sent to the above text editor class, which reverts the insertion, change, split, or join action.
-#### Spell Check Functionality
-- Ongoing
+#### Spell Check Functionality (in progress)
+- Spell Check created with a Trie/prefix tree.
+- The spell checker loads a dictionary to initialize the trie for spell checking text editor words
+- The spell checker also identifies each of the words within the line, and provides spelling suggestions for the mis-spelled words
