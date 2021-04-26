@@ -30,7 +30,6 @@ bool StudentSpellCheck::load(std::string dictionaryFile) {
   string word;
   while (getline(infile, word)) {
     word.erase(remove(word.begin(), word.end(), '\r'), word.end());
-    cout << word << endl;
     insert(word);
   }
   return true;
@@ -77,7 +76,10 @@ bool StudentSpellCheck::search(string text) const {
 }
 
 int StudentSpellCheck::charIndex(char ch) {
-  int a = ch - 'a';
-  return ch - 'a';
+  int index = ch - 'a';
+  if (index > 25 || index < 0)  {
+    index = 26;
+  }
+  return index;
 
 }

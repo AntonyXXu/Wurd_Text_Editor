@@ -13,7 +13,7 @@ public:
   bool load(std::string dict_file);
   bool spellCheck(std::string word, int maxSuggestions, std::vector<std::string>& suggestions);
   void spellCheckLine(const std::string& line, std::vector<Position>& problems);
-  static const int CHARS = 26;
+  static const int CHARS = 27;
 
 private:
   struct TrieNode {

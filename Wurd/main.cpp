@@ -4,7 +4,7 @@
 #include <string>
 
 // Do not change anything in this file other than these initializer values
-const char* DICTIONARYPATH = "dict.txt";
+const char* DICTIONARYPATH = "dictionary.txt";
 const int FOREGROUND_COLOR = COLOR_WHITE;
 const int BACKGROUND_COLOR = COLOR_BLACK;
 const int HIGHLIGHT_COLOR  = COLOR_RED;
