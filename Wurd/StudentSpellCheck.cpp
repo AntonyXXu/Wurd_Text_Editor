@@ -82,7 +82,7 @@ void StudentSpellCheck::spellCheckLine(const std::string& line, std::vector<Spel
     }
 
     // Word is initialized, check if current index is an ending to the word
-    if (charIndex(ch) >= 26 && ch != '\'') {
+    if (charIndex(tolower(ch)) >= 26 && ch != '\'') {
       word = line.substr(firstPos, lastPos - firstPos);
 
       // If the word is misspelled, push it to problems vector
