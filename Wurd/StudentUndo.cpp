@@ -24,14 +24,15 @@ void StudentUndo::submit(const Action action, int row, int col, char ch) {
       && row == previous.row)
     {
       if (action == INSERT
-        && col == previous.col + 1
-        && previous.text[previous.text.size() - 1] != ' '
-        || ch == ' ')
+        && col == previous.col + 1)
       {
-        // Insertion undo linking
-        // Only triggers if the text is the same word and if the inserted text is a tab/space
-        newUndo.text = previous.text + ch;
-        m_undoStack.pop();
+        if (previous.text[previous.text.size() - 1] != ' '
+          || ch == ' ') {
+          // Insertion undo linking
+          // Only triggers if the text is the same word and if the inserted text is a tab/space
+          newUndo.text = previous.text + ch;
+          m_undoStack.pop();
+        }
       }
       else if (action == DELETE)
       {
