@@ -27,12 +27,13 @@ bool StudentTextEditor::load(std::string file) {
   }
   reset();
   string textLine;
+  // Iterate through each line and populate the text editor based on file text
   while (getline(infile, textLine)) {
     textLine.erase(remove(textLine.begin(), textLine.end(), '\r'), textLine.end());
     m_lines.push_back(textLine);
   }
 
-  //Remove the first line initialized (except if file was empty)
+  // Remove the first line initialized (except if file was empty)
   if (!m_lines.empty()) {
     m_lines.pop_front();
     m_linesItr = m_lines.begin();
@@ -45,6 +46,7 @@ bool StudentTextEditor::save(std::string file) {
   if (!outfile) {
     return false;
   }
+  // Iterate through the text editor and save each line to the saved file. 
   list<string>::iterator itr = m_lines.begin();
   while (itr != m_lines.end()) {
     outfile << *itr << endl;
@@ -62,7 +64,7 @@ void StudentTextEditor::move(Dir dir) {
   switch (dir)
   {
   case UP:
-    //Currently at line 0
+    // Currently at line 0
     if (!m_row) {
       m_col = 0;
       return;
@@ -70,7 +72,7 @@ void StudentTextEditor::move(Dir dir) {
     m_linesItr--;
     m_row--;
 
-    //If previous line is shorter, new column is the last member of the previous line
+    // If previous line is shorter, new column is the last member of the previous line
     if (m_col > m_linesItr->length())
     {
       m_col = m_linesItr->length();
@@ -78,7 +80,7 @@ void StudentTextEditor::move(Dir dir) {
     break;
 
   case DOWN:
-    //Currently at the maximum line
+    // Currently at the maximum line
     if (m_row == m_lines.size() - 1) {
       m_col = m_linesItr->length();
       return;
@@ -86,19 +88,19 @@ void StudentTextEditor::move(Dir dir) {
     m_linesItr++;
     m_row++;
 
-    //If next line is shorter, new column is the last member of the previous line
+    // If next line is shorter, new column is the last member of the previous line
     if (m_col > m_linesItr->length()) {
       m_col = m_linesItr->length();
     }
     break;
 
   case LEFT:
-    //Currently at first column
+    // Currently at first column
     if (!m_col) {
       if (!m_row) {
         return;
       }
-      //Go to previous line
+      // Go to previous line
       m_linesItr--;
       m_row--;
       m_col = m_linesItr->length();
@@ -110,12 +112,12 @@ void StudentTextEditor::move(Dir dir) {
     break;
 
   case RIGHT:
-    //Currently at last column
+    // Currently at last column
     if (m_col == m_linesItr->length()) {
       if (m_row == m_lines.size() - 1) {
         return;
       }
-      //Go to next line
+      // Go to next line
       m_row++;
       m_linesItr++;
       m_col = 0;
@@ -136,6 +138,9 @@ void StudentTextEditor::move(Dir dir) {
 }
 
 void StudentTextEditor::del() {
+  // Delete the next character. If at the end of the line, 
+  // join the next line with the current one. 
+  // Then, send the new data to the undo stack
   if (m_col == m_linesItr->length()) {
     if (m_row == m_lines.size() - 1) {
       return;
@@ -153,6 +158,9 @@ void StudentTextEditor::del() {
 }
 
 void StudentTextEditor::backspace() {
+  // Delete the previous character. If at column 0, 
+  // join the current line with the previous line. 
+  // Then, send the new data to the undo stack
   if (!m_col) {
     if (!m_row) {
       return;
@@ -169,6 +177,7 @@ void StudentTextEditor::backspace() {
 }
 
 void StudentTextEditor::insert(char ch) {
+  // Insert new data, and send to undo stack
   if (ch == '\t')
   {
     for (int i = 0; i < 4; i++)
@@ -187,6 +196,7 @@ void StudentTextEditor::insert(char ch) {
 }
 
 void StudentTextEditor::enter() {
+  // Split the line
   getUndo()->submit(Undo::SPLIT, m_row, m_col);
   splitLineHelper();
 }
@@ -202,8 +212,8 @@ int StudentTextEditor::getLines(int startRow, int numRows, std::vector<std::stri
   }
   lines.clear();
   list<string>::iterator itr = m_linesItr;
+  // Move iterator to startRow and push to lines vector
   moveIteratorHelper(m_row, startRow, itr);
-
   while (itr != m_lines.end() && numRows > 0) {
     lines.push_back(*itr);
     itr++;
@@ -220,13 +230,14 @@ void StudentTextEditor::undo() {
     return;
   }
 
-  //Move the editing location to the undo location
+  // Move the editing location to the undo location
   moveIteratorHelper(m_row, row, m_linesItr);
   m_row = row;
   m_col = col;
   string leftOfEnter;
   string rightOfEnter;
 
+  // Perform required action for undo
   switch (action)
   {
   case Undo::INSERT:
@@ -259,19 +270,21 @@ void StudentTextEditor::init() {
 }
 
 void StudentTextEditor::deleteLineHelper() {
+  // Save and delete the current line
   string currentLine = (*m_linesItr);
   m_linesItr = m_lines.erase(m_linesItr);
   m_linesItr--;
-  m_col = m_linesItr->length();
   m_row--;
+  m_col = m_linesItr->length();
+  // Join the saved line with the previous line
   m_linesItr->insert(m_linesItr->length(), currentLine);
 }
 
 void StudentTextEditor::splitLineHelper() {
-  //Splice the current line at the cursor location
+  // Splice the current line at the cursor location
   string leftOfEnter = m_linesItr->substr(0, m_col);
   string rightOfEnter = m_linesItr->substr(m_col, m_linesItr->length() - m_col);
-  //Replace the current line with left side of text
+  // Replace the current line with left side of text
   m_lines.insert(m_linesItr, leftOfEnter);
   *m_linesItr = rightOfEnter;
   m_row++;

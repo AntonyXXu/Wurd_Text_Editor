@@ -17,8 +17,8 @@ void StudentUndo::submit(const Action action, int row, int col, char ch) {
   newUndo.text = ch;
   if (!m_undoStack.empty())
   {
-    //Replace the previous undo with the new undo for batching
-    //Batching does not occur if the previously inserted char is space
+    // Replace the previous undo with the new undo for batching
+    // Batching does not occur if the previously inserted char is space
     UndoData previous = m_undoStack.top();
     if (action == previous.action
       && row == previous.row)
@@ -28,9 +28,8 @@ void StudentUndo::submit(const Action action, int row, int col, char ch) {
         && previous.text[previous.text.size() - 1] != ' '
         || ch == ' ')
       {
-        //Insertion undo linking
-        //Only triggers if the text is the same word
-        //and if the inserted text is a tab/space
+        // Insertion undo linking
+        // Only triggers if the text is the same word and if the inserted text is a tab/space
         newUndo.text = previous.text + ch;
         m_undoStack.pop();
       }
@@ -38,13 +37,13 @@ void StudentUndo::submit(const Action action, int row, int col, char ch) {
       {
         if (col == previous.col - 1)
         {
-          //Backspace deletion undo linking
+          // Backspace deletion undo linking
           newUndo.text += previous.text;
           m_undoStack.pop();
         }
         else if (col == previous.col)
         {
-          //Delete deletion undo linking
+          // Delete deletion undo linking
           newUndo.text = previous.text + ch;
           m_undoStack.pop();
         }
@@ -56,6 +55,8 @@ void StudentUndo::submit(const Action action, int row, int col, char ch) {
 }
 
 StudentUndo::Action StudentUndo::get(int& row, int& col, int& count, std::string& text) {
+  // Returns data of the undo action to the text editor. 
+  // Inverse the action of the stack data
   if (m_undoStack.empty()) {
     return ERROR;
   }

@@ -24,10 +24,11 @@ bool StudentSpellCheck::load(std::string dictionaryFile) {
   if (!infile) {
     return false;
   }
-  //Reset previous dictionary and load the new one in. Trim \r characters
+  // Reset previous dictionary and load the new one in. Trim \r characters
   clear(m_trieRoot);
   m_trieRoot = new TrieNode();
   string word;
+  // Insert each word of the dictionary into the Trie
   while (getline(infile, word)) {
     word.erase(remove(word.begin(), word.end(), '\r'), word.end());
     insert(word);
@@ -40,16 +41,16 @@ bool StudentSpellCheck::spellCheck(std::string word, int max_suggestions, std::v
     return true;
   }
   suggestions.clear();
-  //For each letter index, change the index to a different letter
+  // For each letter index, change the index to a different letter
   for (int i = 0; i < word.size(); i++) {
     string replWord = word;
     for (int j = 0; j < CHARS; j++) {
-      //If it's the same letter, continue.
+      // If it's the same letter, continue.
       if (word[i] == 'a' + j) {
         continue;
       }
 
-      //Replace the index of the word and search it
+      // Replace the index of the word and search it
       replWord[i] = 'a' + j;
       if (search(replWord)) {
         suggestions.push_back(replWord);
@@ -69,8 +70,9 @@ void StudentSpellCheck::spellCheckLine(const std::string& line, std::vector<Spel
   bool wordInit = false;
 
   for (lastPos; lastPos < line.size(); lastPos++) {
-    //Checks if the first word is initialized. If it is not, and the current position is a letter or apostrophe, initialize the word
+
     char ch = line[lastPos];
+    // Checks if the first word is initialized. If it is not, and the current position is a letter or apostrophe, initialize the word and position
     if (!wordInit) {
       if (ch == '\'' || charIndex(ch) < 26) {
         wordInit = true;
@@ -79,21 +81,20 @@ void StudentSpellCheck::spellCheckLine(const std::string& line, std::vector<Spel
       continue;
     }
 
-    //Word is initialized, check if current index is an ending to the word
+    // Word is initialized, check if current index is an ending to the word
     if (charIndex(ch) >= 26 && ch != '\'') {
       word = line.substr(firstPos, lastPos - firstPos);
 
-      //If the word is misspelled, push it to problems vector
+      // If the word is misspelled, push it to problems vector
       if (!search(word)) {
         Position pos;
         pos.start = firstPos;
         pos.end = lastPos - 1;
         problems.push_back(pos);
-
       }
-      //Reset the word initialization since a new word has started
+      // Reset the word initialization since a new word has started
       wordInit = false;
-       }
+    }
   }
 
 }
@@ -104,20 +105,23 @@ void StudentSpellCheck::insert(string word) {
   }
   TrieNode* currNode = m_trieRoot;
   for (int i = 0; i < word.size(); i++) {
+    // Iterate through each letter of the word
     int index = charIndex(tolower(word[i]));
+
+    // If the node is empty, create a new TrieNode
     if (!currNode->childrenNodes[index]) {
       currNode->childrenNodes[index] = new TrieNode();
     }
     currNode = currNode->childrenNodes[index];
   }
   currNode->leaf = true;
-
 }
 
 void StudentSpellCheck::clear(TrieNode* node) {
   if (node == nullptr) {
     return;
   }
+  // Effectively pre-order traverse and delete all nodes
   for (int i = 0; i < CHARS; i++) {
     clear(node->childrenNodes[i]);
   }
@@ -127,6 +131,7 @@ void StudentSpellCheck::clear(TrieNode* node) {
 
 bool StudentSpellCheck::search(string word) const {
   TrieNode* currNode = m_trieRoot;
+  // Iterate through the word and the trie
   for (int i = 0; i < word.size(); i++) {
     if (!currNode) {
       return false;
@@ -134,6 +139,7 @@ bool StudentSpellCheck::search(string word) const {
     int index = charIndex(tolower(word[i]));
     currNode = currNode->childrenNodes[index];
   }
+  // Last node must be a leaf
   if (!currNode || !currNode->leaf) {
     return false;
   }
@@ -143,9 +149,10 @@ bool StudentSpellCheck::search(string word) const {
 
 int StudentSpellCheck::charIndex(char ch) const {
   int index = ch - 'a';
-  //Default index = 26 for special characters
+  // Default index = 26 for special characters
   if (index > 25 || index < 0) {
     index = 26;
   }
+  // Return an index for checking the TrieNode vector
   return index;
 }
