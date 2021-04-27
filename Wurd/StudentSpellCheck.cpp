@@ -40,12 +40,17 @@ bool StudentSpellCheck::spellCheck(std::string word, int max_suggestions, std::v
     return true;
   }
   suggestions.clear();
-  //For each letter index, change the index to any of the existing
+  //For each letter index, change the index to a different letter
   for (int i = 0; i < word.size(); i++) {
     string replWord = word;
     for (int j = 0; j < CHARS; j++) {
+      //If it's the same letter, continue.
+      if (word[i] == 'a' + j) {
+        continue;
+      }
+
+      //Replace the index of the word and search it
       replWord[i] = 'a' + j;
-      //Search the new word. If it's a real word, push the word to suggestions
       if (search(replWord)) {
         suggestions.push_back(replWord);
         if (suggestions.size() >= max_suggestions) {
