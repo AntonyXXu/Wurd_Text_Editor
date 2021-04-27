@@ -39,13 +39,21 @@ bool StudentSpellCheck::spellCheck(std::string word, int max_suggestions, std::v
   if (search(word)) {
     return true;
   }
-  //Check for suggestions
-  //Suggestions must only be one letter different and same length
-  bool difference = false;
+  suggestions.clear();
+  //For each letter index, change the index to any of the existing
   for (int i = 0; i < word.size(); i++) {
-
+    string replWord = word;
+    for (int j = 0; j < CHARS; j++) {
+      replWord[i] = 'a' + j;
+      //Search the new word. If it's a real word, push the word to suggestions
+      if (search(replWord)) {
+        suggestions.push_back(replWord);
+        if (suggestions.size() >= max_suggestions) {
+          break;
+        }
+      }
+    }
   }
-
   return false;
 }
 
@@ -89,7 +97,10 @@ bool StudentSpellCheck::search(string word) const {
     int index = charIndex(tolower(word[i]));
     currNode = currNode->childrenNodes[index];
   }
-  return currNode->leaf;
+  if (!currNode || !currNode->leaf) {
+    return false;
+  }
+  return true;
 
 }
 
