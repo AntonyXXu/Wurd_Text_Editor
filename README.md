@@ -16,4 +16,8 @@ This project was created based on UCLA CS-32 Data Structures and Algorithms Proj
 #### Spell Check Functionality (in progress)
 - Spell Check created with a Trie/prefix tree.
 - The spell checker loads a dictionary to initialize the trie for spell checking text editor words
-- The spell checker also identifies each of the words within the line, and provides spelling suggestions for the mis-spelled words
+- Spelling suggestions was took me a while to think of.
+  - If the word is not within the dictionary, the algorithm goes through each individual index of the string {O(word size)}
+    - Then, it replaces the given index with a new character, and searches the new word within the dictionary {O(word size)}. If the new word is found, it's pushed to the suggestion array. 
+- Spell Check Display (Highlights all of the mis-spelled words) 
+  - This function iterates through the editor line, and returns a vector of words that are misspelled. Primarly used a simple search algorithm to find all the incorrectly spelled characters on the line.
