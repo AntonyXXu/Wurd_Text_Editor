@@ -1,9 +1,14 @@
 # Wurd Text Editor in C++
 Created logic and data structures behind a simple text editor, capable of spellcheck, undo, loading, and saving. A list of strings keeps track of all the lines of text with an iterator keeping track of the current line. I used a Trie to implement the spell checker, and a stack of undo data to maintain undo functions. Note I did not create the GUI.
+Feel free to try it out and download the Wurd.zip file.
 
 I built the StudentTextEditor.cpp/.h, StudentUndo.cpp/.h, and the StudentSpellCheck.cpp/.h files.
 
 This project was created based on UCLA CS-32 Data Structures and Algorithms Project 4 in 2021. Spec sheet is attached.
+
+## Demo:
+![wurd_demo](https://user-images.githubusercontent.com/77988513/116180397-11fdf400-a6d6-11eb-8236-d3918f869903.gif)
+
 
 ## Details
 #### Text Editor
