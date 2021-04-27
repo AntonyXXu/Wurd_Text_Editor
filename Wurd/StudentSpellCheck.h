@@ -19,7 +19,7 @@ private:
   struct TrieNode {
     TrieNode()
     {
-     
+
       for (int i = 0; i < CHARS; i++)
       {
         childrenNodes.push_back(nullptr);

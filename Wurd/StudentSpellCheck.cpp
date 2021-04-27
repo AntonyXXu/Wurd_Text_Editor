@@ -63,7 +63,39 @@ bool StudentSpellCheck::spellCheck(std::string word, int max_suggestions, std::v
 }
 
 void StudentSpellCheck::spellCheckLine(const std::string& line, std::vector<SpellCheck::Position>& problems) {
-  // TODO
+  problems.clear();
+  int firstPos, lastPos = 0;
+  string word;
+  bool wordInit = false;
+
+  for (lastPos; lastPos < line.size(); lastPos++) {
+    //Checks if the first word is initialized. If it is not, and the current position is a letter or apostrophe, initialize the word
+    char ch = line[lastPos];
+    if (!wordInit) {
+      if (ch == '\'' || charIndex(ch) < 26) {
+        wordInit = true;
+        firstPos = lastPos;
+      }
+      continue;
+    }
+
+    //Word is initialized, check if current index is an ending to the word
+    if (charIndex(ch) >= 26 && ch != '\'') {
+      word = line.substr(firstPos, lastPos - firstPos);
+
+      //If the word is misspelled, push it to problems vector
+      if (!search(word)) {
+        Position pos;
+        pos.start = firstPos;
+        pos.end = lastPos - 1;
+        problems.push_back(pos);
+
+      }
+      //Reset the word initialization since a new word has started
+      wordInit = false;
+       }
+  }
+
 }
 
 void StudentSpellCheck::insert(string word) {
@@ -116,5 +148,4 @@ int StudentSpellCheck::charIndex(char ch) const {
     index = 26;
   }
   return index;
-
 }
