@@ -74,7 +74,7 @@ void StudentSpellCheck::spellCheckLine(const std::string& line, std::vector<Spel
     char ch = line[lastPos];
     // Checks if the first word is initialized. If it is not, and the current position is a letter or apostrophe, initialize the word and position
     if (!wordInit) {
-      if (ch == '\'' || charIndex(ch) < 26) {
+      if (ch == '\'' || charIndex(tolower(ch)) < 26) {
         wordInit = true;
         firstPos = lastPos;
       }
